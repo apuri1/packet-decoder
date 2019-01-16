@@ -1,0 +1,35 @@
+{
+   "_comment" : "JSON Configuration file for the s1pacRelay application",
+   "Name" : {
+      "name" : "s1pacrelay"
+   },
+   "Mapping" : {
+      "mapping_type" : "MultiIndex",
+      "_mapping_type_comment" : "options are MultiIndex, StandardMap",
+      "data_expiration_seconds" : 240,
+      "_data_expiration_seconds_comment" : "Number of seconds after which data is erased MultIndex only, mainly for testing"
+   },
+   "Interfaces" : {
+      "interface1" : "eth2",
+      "_interface1_comment" : "Network interface name e.g eth0.",
+      "interface2" : "",
+      "_interface2_comment" : "Network interface name e.g eth1."
+   },
+   "Filters" : {
+      "filter" : "proto gre || sctp || tcp",
+      "_filter_comment" : "list of protocols to capture. Leave empty for all packets",
+      "_filter_example" : "proto gre || sctp || tcp"
+   },
+   "Transmission" : {
+      "protocol" : "sctp",
+      "_protocol_comment" : "transport protocol used to communicate with aircraft. Options are udp or sctp."
+   },
+   "Logging" : {
+      "level" : "VERBOSE",
+      "_level_comment" : "Log level"
+   },
+   "Mode" : {
+      "test" : true,
+      "_test_comment" : "Set to true for test/debug mode, set to false for production mode"
+   }
+}

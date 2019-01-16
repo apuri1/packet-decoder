@@ -1,0 +1,115 @@
+{
+   "_comment1" : "JSON Configuration file for diameter packet injection",
+   "_comment2" : "Note that some _exclude flags have not been implemented",
+   "AVPCODE" : {
+      "DIAMETER_REQUEST_ANSWER_COMMAND_CODE" : 318,
+      "VENDOR_SPECIFIC_APPLICATION_ID" : 260,
+      "DIAMETER_SESSION_ID" : 263,
+      "ORIGIN_HOST" : 264,
+      "RESULT_CODE" : 268,
+      "AUTH_SESSION_STATE" : 277,
+      "USER_NAME" : 1,
+      "ORIGIN_REALM" : 296,
+      "DESTINATION_REALM" : 283,
+      "DESTINATION_HOST" : 293,
+      "VISITED_PLMN_ID" : 1407,
+      "REQUESTED_EUTRAN_AUTHENTICATION_INFO" : 1408,
+      "NUMBER_OF_REQUESTED_VECTORS" : 1410,
+      "IMMEDIATE_RESPONSE_PREFERRED" : 1412,
+      "AUTHENTCATION_INFO" : 1413,
+      "EUTRAN_VECTOR" : 1414,
+      "ITEM_NUMBER" : 1419,
+      "RAND" : 1447,
+      "XRES" : 1448,
+      "AUTN" : 1449,
+      "KASME" : 1450,
+      "VENDOR_ID" : 266,
+      "AUTH_APPLICATION_ID" : 260,
+      "_exclude_diameter_request_answer_command_code" : false,
+      "_exclude_VENDOR_SPECIFIC_APPLICATION_ID" : false,
+      "_exclude_DIAMETER_SESSION_ID" : false,
+      "_exclude_ORIGIN_HOST" : false,
+      "_exclude_RESULT_CODE" : false,
+      "_exclude_AUTH_SESSION_STATE" : false,
+      "_exclude_USER_NAME" : false,
+      "_exclude_ORIGIN_REALM" : false,
+      "_exclude_DESTINATION_REALM" : false,
+      "_exclude_DESTINATION_HOST" : false,
+      "_exclude_VISITED_PLMN_ID" : false,
+      "_exclude_REQUESTED_EUTRAN_AUTHENTICATION_INFO" : false,
+      "_exclude_NUMBER_OF_REQUESTED_VECTORS" : false,
+      "_exclude_IMMEDIATE_RESPONSE_PREFERRED" : false,
+      "_exclude_AUTHENTCATION_INFO" : false,
+      "_exclude_EUTRAN_VECTOR" : false,
+      "_exclude_ITEM_NUMBER" : false,
+      "_exclude_RAND" : false,
+      "_exclude_XRES" : false,
+      "_exclude_AUTN" : false,
+      "_exclude_KASME" : false,
+      "_exclude_VENDOR_ID" : false,
+      "_exclude_AUTH_APPLICATION_ID" : false
+   },
+   "PPID" : {
+      "DIAMETER_PPID_46" : 46,
+      "DIAMETER_PPID_47" : 47,
+      "PPID_UNSPECIFIED" : 0,
+      "S1AP_PPID" : 18
+   },
+   "ADDRESS" : {
+      "HOST_IP" : "127.0.0.1",
+      "DIAMETER_PORT" : 3868,
+      "S1AP_PORT" : 36412
+   },
+   "SESSION" : {
+      "SESSION_ID" : "LD6vSGSNMME01.epc.mnc014.mcc901.3gppnetwork.org;1571490859;10;2.2;94598974",
+      "ORIGIN_HOST" : "LD6vSGSNMME01.epc.mnc014.mcc901.3gppnetwork.org",
+      "ORIGIN_REALM" : "epc.mnc014.mcc901.3gppnetwork.org",
+      "DESTINATION_HOST" : "LABvHSS01.epc.mnc014.mcc901.3gppnetwork.org",
+      "DESTINATION_REALM" : "epc.mnc014.mcc901.3gppnetwork.org",
+      "_exclude_SESSION_ID" : false,
+      "_exclude_ORIGIN_HOST" : false,
+      "_exclude_ORIGIN_REALM" : false,
+      "_exclude_DESTINATION_HOST" : false,
+      "_exclude_DESTINATION_REALM" : false
+   },
+   "IMSI" : {
+      "USER" : "901111234567890",
+      "VISITED_PLMN_ID" : "09f141",
+      "_exclude_USER" : false,
+      "_exclude_VISITED_PLMN_ID" : false
+   },
+   "EUTRAN_VECTOR" : {
+      "NUMBER_OF_REQUESTED_VECTORS" : 2,
+      "RAND" : "ccbf13a96d18954fd9081e2e591e3454",
+      "XRES" : "43f0de5aa79ce41a",
+      "AUTN" : "06594354621c8000c881359dc46cf84c",
+      "KASME" : "6417d38ce0fc4b44e7a1faa58e6360609271e4c2ceb96fc390cfed690779e2a0",
+      "_exclude_NUMBER_OF_REQUESTED_VECTORS" : false,
+      "_exclude_RAND" : false,
+      "_exclude_XRES" : false,
+      "_exclude_AUTN" : false,
+      "_exclude_KASME" : false
+   },
+   "SCTP_DATA" : {
+      "tag" : 17,
+      "chksum" : 11111,
+      "type" : 0,
+      "flags" : "0x0",
+      "stream_id" : 0,
+      "stream_seq" : 0
+   },
+   "VARIOUS" : {
+      "VENDOR_ID" : 10415,
+      "S6A_APPLICATION_ID" : 16777251,
+       "_exclude_VENDOR_ID" : false,
+       "_exclude_S6A_APPLICATION_ID" : false
+   },
+   "S1AP" : {
+      "RawFilesPath" : "/root/Development/lte_pcap_packets/s1ap_identity_response.bin"
+   },
+   "MESSAGE_TRANSMIT" : {
+      "SEND_MODE" : "AIA",
+      "_comment_SEND_MODE" : "possible settings: AIR, AIA, both"
+   }
+}
+
