@@ -1,3 +1,3 @@
-# Diameter Decoder
+# Decoder
 
-Decode diameter messages
+Decode messages
