@@ -1,4 +1,16 @@
+stages:
+  - build
+
+centos-image:
+  stage: build
+  image: centos:7
+  script:
+    - yum update -y
+    - yum install -y devtoolset-7 rh-python36 git cmake which
+
+
 Decoder:
   script:
+    - scl enable devtoolset-7 bash
     - make clean
     - make
