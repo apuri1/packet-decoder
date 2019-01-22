@@ -10,6 +10,7 @@ centos-image:
 
 
 Decoder:
+  stage: build
   script:
     - scl enable devtoolset-7 bash
     - make clean
