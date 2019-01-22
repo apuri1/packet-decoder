@@ -21,7 +21,7 @@ all:    lksctp json decoders
 lksctp:
 	cd $(LKSCTP_PATH)/ && rm -rf $(LKSCTP_SPECIFIC_PATH) && tar xvzf $(LKSCTP_VERSION).tar.gz \
         && cd $(LKSCTP_VERSION) && unset LDFLAGS && unset CFLAGS && unset GCC && unset CC \
-        && scl enable devtoolset-7 && ./configure && $(MAKE)
+        && scl enable devtoolset-7 ./configure && $(MAKE)
 
 json:
 	cd $(JSON); scl enable devtoolset-7 $(MAKE)
