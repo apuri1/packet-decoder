@@ -1,0 +1,4 @@
+Decoder:
+  script:
+    - make clean
+    - make
