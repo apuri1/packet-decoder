@@ -1,17 +1,14 @@
 stages:
   - build
 
-centos-image:
+Decoder:
   stage: build
   image: centos:7
   script:
     - yum update -y
-    - yum install -y devtoolset-7 rh-python36 git cmake which
-
-
-Decoder:
-  stage: build
-  script:
+    - yum install -y epel-release centos-release-scl
+    - yum-config-manager --enable rhel-server-rhscl-7-rpms
+    - yum install -y devtoolset-7 devtoolset-7-valgrind rh-python36 git git-lfs cmake which curl libpcap libpcap-devel
     - scl enable devtoolset-7 bash
     - make clean
     - make
