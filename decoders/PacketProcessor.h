@@ -12,6 +12,8 @@
 
 #include "PacketBuffer.h"
 #include "DecodeDiameter.h"
+#include "DecodeHTTP.h"
+#include "DecodeMQTT.h"
 
 
 #include <chrono>
@@ -36,6 +38,8 @@ class PacketProcessor
                                     uint32_t link_layer_header_size);
 
        DecodeDiameter *diameter_decoder;
+       DecodeHTTP     *http_decoder;
+       DecodeMQTT     *mqtt_decoder;
        PacketBuffer *packet_buffer;
 
     private:

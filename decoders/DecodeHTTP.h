@@ -1,5 +1,5 @@
-#ifndef DECODE_DIAMETER_H_
-#define DECODE_DIAMETER_H_
+#ifndef DECODE_HTTP_H_
+#define DECODE_HTTP_H_
 
 #include <stdio.h>
 #include <vector>
@@ -12,6 +12,8 @@
 
 #include "ContainerMultiIndex.h"
 
+static const int kHTTP_PORT                       = 80;
+static const int kHTTPS_PORT                      = 443;
 
 class DecodeHTTP : public DecodePacket
 {

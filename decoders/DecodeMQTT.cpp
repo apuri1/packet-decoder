@@ -12,19 +12,24 @@
 #include <cstdlib>
 #include <fstream>
 
-#include "DecodeHTTP.h"
+#include "DecodeMQTT.h"
 #include "Config.h"
 
 //#include <curl/curl.h>
 
 #undef MODULE_NAME
-#define MODULE_NAME "DECODE HTTP"
+#define MODULE_NAME "DECODE MQTT"
 
 
-void DecodeHTTP::ProcessTCPPayload(std::vector<uint8_t> & payload,
+void DecodeMQTT::ProcessTCPPayload(std::vector<uint8_t> & payload,
                                    uint32_t payload_length,      //TODO
                                    std::string packet_time_stamp)
 {
+    int32_t control_packet_type;
+     //First get the Control Packet Type
+     // first nibble = high nibble
+     control_packet_type = (payload[0] >> 4) & 0x0F;
 
+     printf("Got Control Packet Type %d\n", control_packet_type);
 
 }

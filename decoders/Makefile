@@ -36,6 +36,7 @@ OBJS 		= Config.o \
                 PacketProcessor.o \
                 DecodeDiameter.o \
                 DecodeHTTP.o \
+                DecodeMQTT.o \
                 UdpTx.o \
                 SctpTx.o \
                 Maint.o

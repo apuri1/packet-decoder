@@ -8,10 +8,13 @@
 #define  kLINKTYPE_LINUX_SLL        113
 #define  kLINKTYPE_ETHERNET           1
 #define  kLINKTYPE_EXTENDED_VLAN 0x8100
-#define  kSCTP_PROTOCOL          132
-#define  kTCP_PROTOCOL           6
-#define  kUDP_PROTOCOL           17
-#define  kGRE_PROTOCOL           47
+
+static const int kSCTP_PROTOCOL                   = 132;
+static const int kTCP_PROTOCOL                    = 6;
+static const int kUDP_PROTOCOL                    = 17;
+static const int kGRE_PROTOCOL                    = 47;
+
+static const int kPPID_UNSPECIFIED                = 0;
 
 const char* const kERROR = "ERROR";
 

@@ -12,32 +12,31 @@
 
 #include "ContainerMultiIndex.h"
 
-#define kDIAMETER_REQUEST_ANSWER_COMMAND_CODE     318
-#define kS6A_APPLICATION_ID                       16777251
-#define kVENDOR_SPECIFIC_APPLICATION_ID           260
-#define kAVP_CODE_DIAMETER_SESSION_ID             263
-#define kAVP_CODE_ORIGIN_HOST                     264
-#define kAVP_RESULT_CODE                          268
-#define kAVP_AUTH_SESSION_STATE                   277
-#define kAVP_USER_NAME                            1   //IMSI
-#define kAVP_ORIGIN_REALM                         296
-#define kAVP_DESTINATION_REALM                    283
-#define kAVP_DESTINTAION_HOST                     293
-#define kAVP_VISITED_PLMN_ID                      1407
-#define kAVP_REQUESTED_EUTRAN_AUTHENTICATION_INFO 1408
-#define kAVP_NUMBER_OF_REQUESTED_VECTORS          1410
-#define kAVP_IMMEDIATE_RESPONSE_PREFERRED         1412
-#define kAVP_AUTHENTCATION_INFO                   1413
-#define kAVP_EUTRAN_VECTOR                        1414
-#define kAVP_CODE_RAND                            1447
-#define kAVP_CODE_XRES                            1448
-#define kAVP_CODE_AUTN                            1449
-#define kAVP_CODE_KASME                           1450
-#define kAVP_VENDOR_ID                            10415
-#define kDIAMETER_PPID_46                         46
-#define kDIAMETER_PPID_47                         47
-#define kDIAMETER_PORT                            3868  //IANA assigned
-#define kPPID_UNSPECIFIED                         0
+static const int kDIAMETER_REQUEST_ANSWER_COMMAND_CODE     = 318;
+static const int kS6A_APPLICATION_ID                       = 16777251;
+static const int kVENDOR_SPECIFIC_APPLICATION_ID           = 260;
+static const int kAVP_CODE_DIAMETER_SESSION_ID             = 263;
+static const int kAVP_CODE_ORIGIN_HOST                     = 264;
+static const int kAVP_RESULT_CODE                          = 268;
+static const int kAVP_AUTH_SESSION_STATE                   = 277;
+static const int kAVP_USER_NAME                            = 1;   //IMSI
+static const int kAVP_ORIGIN_REALM                         = 296;
+static const int kAVP_DESTINATION_REALM                    = 283;
+static const int kAVP_DESTINTAION_HOST                     = 293;
+static const int kAVP_VISITED_PLMN_ID                      = 1407;
+static const int kAVP_REQUESTED_EUTRAN_AUTHENTICATION_INFO = 1408;
+static const int kAVP_NUMBER_OF_REQUESTED_VECTORS          = 1410;
+static const int kAVP_IMMEDIATE_RESPONSE_PREFERRED         = 1412;
+static const int kAVP_AUTHENTCATION_INFO                   = 1413;
+static const int kAVP_EUTRAN_VECTOR                        = 1414;
+static const int kAVP_CODE_RAND                            = 1447;
+static const int kAVP_CODE_XRES                            = 1448;
+static const int kAVP_CODE_AUTN                            = 1449;
+static const int kAVP_CODE_KASME                           = 1450;
+static const int kAVP_VENDOR_ID                            = 10415;
+static const int kDIAMETER_PPID_46                         = 46;
+static const int kDIAMETER_PPID_47                         = 47;
+static const int kDIAMETER_PORT                            = 3868;  //IANA assigned
 
 class DecodeDiameter : public DecodePacket
 {

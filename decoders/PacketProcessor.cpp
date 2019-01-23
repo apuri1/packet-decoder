@@ -10,6 +10,8 @@ PacketProcessor::PacketProcessor()
 // Instantiate a bunch of protocol decoders
 //
     diameter_decoder = new DecodeDiameter();
+    http_decoder     = new DecodeHTTP();
+    mqtt_decoder     = new DecodeMQTT();
 }
 
 PacketProcessorThread::PacketProcessorThread()
@@ -160,6 +162,8 @@ iphdr* PacketProcessor::ProcessEthernetFrame(const uint8_t *buffer,
 
     ether_type = ntohs(eth->h_proto);
 
+    printf("ethernet proto type is %d\n", ether_type);
+
 // Some routers include VLAN headers in ethernet frames, take these into account
 //
     if(ether_type == kLINKTYPE_EXTENDED_VLAN)
@@ -220,8 +224,8 @@ int32_t PacketProcessor::ProcessTransportLayer(iphdr *& iph,
 
 //TCP variables
     struct tcphdr *tcph          = nullptr;
-    uint16_t tcplen              = 0;
-    uint16_t payload_length;
+    uint32_t tcphdrlen              = 0;
+    uint32_t payload_length;
     uint8_t *payload_ptr         = nullptr;
     uint32_t ack_number;
     uint16_t urgen_flag;
@@ -402,29 +406,25 @@ int32_t PacketProcessor::ProcessTransportLayer(iphdr *& iph,
         {
              printf( "handle TCP packet \n");
 
-             tcph = (struct tcphdr*)(buffer + iphdrlen + link_layer_header_size);
+             tcph = (struct tcphdr*)(buffer + link_layer_header_size + iphdrlen);
 
-             printf(  " *TCP:\n  *Header Source port %hu\n  *Destination port %hu\n ", ntohs(tcph->source),
-                                                                                       ntohs(tcph->dest));
+             source_port = ntohs(tcph->source);
+             dest_port   = ntohs(tcph->dest);
 
-             uint8_t _seqno[10];
+             printf(  " *TCP:\n  *Header Source port %hu\n  *Destination port %hu\n ", source_port,
+                                                                                       dest_port);
 
              uint32_t seqno = ntohl(tcph->seq);
 
-             _seqno[0] = seqno >> 24;
-             _seqno[1] = seqno >> 16;
-             _seqno[2] = seqno >> 8;
-             _seqno[3] = seqno;
-
-             printf("sequence number: %u (bytes: %x%x%x%x)\n", seqno, _seqno[0],_seqno[1],_seqno[2],_seqno[3]);
+             printf("sequence number: %u (\n", seqno);
 
              ack_number = ntohl(tcph->ack_seq);
 
-             printf("acknowledge number %u \n", ack_number);
+             printf("acknowledge seq %u \n", ack_number);
 
-             tcplen = tcph->doff*4;
+             tcphdrlen = tcph->doff*4;
 
-             printf("TCP header length %d\n", tcplen);
+             printf("TCP header length %d\n", tcphdrlen);
 
              urgen_flag  = tcph->urg;
              printf("Urgent Flag: %u\n", urgen_flag);
@@ -447,19 +447,19 @@ int32_t PacketProcessor::ProcessTransportLayer(iphdr *& iph,
              window = tcph->window;
              printf("Window: %u\n", window);
 
-             payload_length = buffer_length-(link_layer_header_size+iphdrlen+tcplen);
+             payload_length = buffer_length-(link_layer_header_size+iphdrlen+tcphdrlen);
 
              printf("Calculated TCP payload length %d (buffer length %d - (link layer %d +ip header %d + tcp length %d)) \n", payload_length,
                                                                                                                               buffer_length,
                                                                                                                               link_layer_header_size,
                                                                                                                               iphdrlen,
-                                                                                                                              tcplen);
+                                                                                                                              tcphdrlen);
 
-             payload_ptr = (uint8_t *)(buffer + tcplen + iphdrlen + link_layer_header_size);
+             payload_ptr = (uint8_t *)(buffer + link_layer_header_size + iphdrlen + tcphdrlen);
 
              std::vector<uint8_t> payload(&payload_ptr[0], &payload_ptr[payload_length]);
 
-             printf("printing bytes ");
+             printf("printing payload bytes ");
 
              for(const auto& item: payload)
              {
@@ -467,6 +467,48 @@ int32_t PacketProcessor::ProcessTransportLayer(iphdr *& iph,
              }
 
              printf("\n");
+
+             switch(source_port) //Check the source port
+             {
+                  case kHTTP_PORT:
+                  case kHTTPS_PORT:
+                  {
+                       http_decoder->ProcessTCPPayload(payload, payload_length, packet_time_stamp);
+                       break;
+                  }
+                  case kMQTT_PORT:
+                  case kMQTT_SSL_PORT:
+                  {
+                       mqtt_decoder->ProcessTCPPayload(payload, payload_length, packet_time_stamp);
+                       break;
+                  }
+                  default:
+                  {
+
+                     switch(dest_port) //No matching source port found, check the dest port
+                     {
+                          case kHTTP_PORT:
+                          case kHTTPS_PORT:
+                          {
+                               http_decoder->ProcessTCPPayload(payload, payload_length, packet_time_stamp);
+                               break;
+                          }
+                          case kMQTT_PORT:
+                          case kMQTT_SSL_PORT:
+                          {
+                               mqtt_decoder->ProcessTCPPayload(payload, payload_length, packet_time_stamp);
+                               break;
+                          }
+                          default:
+                          {
+                               break;
+                          }
+                     }
+
+                     break;
+                  }
+             }
+
 
              //TODO, need to analyse bytes and send to dedicated decoders
 
