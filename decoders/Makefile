@@ -23,6 +23,7 @@ INCLUDES    = -I. \
 LDFLAGS	    = -L. \
               -L$(LKSCTP_LIB) -lsctp \
               -Llib/ -lpcap \
+              -Llib64/ -lcurl \
               -lpthread
 
 OBJS 		= Config.o \
@@ -37,8 +38,6 @@ OBJS 		= Config.o \
                 DecodeDiameter.o \
                 DecodeHTTP.o \
                 DecodeMQTT.o \
-                UdpTx.o \
-                SctpTx.o \
                 Maint.o
 
 

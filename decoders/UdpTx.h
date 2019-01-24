@@ -6,24 +6,18 @@
 #include <cstring>
 #include <string>
 
-#include <sys/socket.h>
-#include <sys/types.h>       // For data types
-#include <sys/socket.h>      // For socket(), connect(), send(), and recv()
-#include <netdb.h>           // For gethostbyname()
-#include <arpa/inet.h>       // For inet_addr()
-#include <unistd.h>          // For close()
-#include <netinet/in.h>      // For sockaddr_in
+#include "ClientConnection.h"
 
 //Don't call bind in the client. random interface & port chosen by OS
 
 
-class UdpTx
+class UdpTx : public ClientConnection
 {
    public:
 
     UdpTx(std::string ipaddr);
 
-    int32_t SendToRemote(uint8_t *buffer, int32_t len);
+    int32_t SendMessage(uint8_t *buffer, int32_t len);
 
    private:
 

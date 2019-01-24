@@ -10,7 +10,7 @@ UdpTx::UdpTx(std::string ipaddr)
    m_ipaddr = ipaddr;
 }
 
-int32_t UdpTx::SendToRemote(uint8_t *buffer, int32_t len)
+int32_t UdpTx::SendMessage(uint8_t *buffer, int32_t len)
 {
     retVal = -1;
 

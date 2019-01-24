@@ -16,7 +16,6 @@ Config::Config()
    mapping_type          = "";
    pcap_flag             = false;
    interface1            = "N/A";
-   interface2            = "N/A";
    filter                = "";
    transmission_protocol = "";
 }
@@ -65,7 +64,6 @@ int Config::ReadConfig(std::string configFile)
         SetDataExpirationTimeSecs(value["Mapping"].get("data_expiration_seconds", 259200 ).asUInt()); //72 hours
 
         SetInterface(value["Interfaces"].get("interface1", "default" ).asString());
-        SetInterface2(value["Interfaces"].get("interface2", "default" ).asString());
 
         SetFilter(value["Filters"].get("filter", "default" ).asString());
 
@@ -98,11 +96,6 @@ void Config::SetInterface(std::string interface)
      interface1 = interface;
 }
 
-void Config::SetInterface2(std::string interface)
-{
-     interface2 = interface;
-}
-
 void Config::SetFilter(std::string str)
 {
      filter = str;
@@ -130,7 +123,6 @@ void Config::PrintConfiguration()
      printf( "     Mapping to be used  : %s\n", mapping_type.c_str());
      printf( "     Data Expiration     : %d seconds\n", expiration_secs);
      printf( "     interface 1         : %s\n", interface1.c_str());
-     printf( "     interface 2         : %s\n", interface2.c_str());
      printf( "     filter to apply     : '%s'\n", filter.c_str());
      printf( "     Read from pcap file : %s\n", (pcap_flag ? "true" : "false"));
      printf( "     Test Mode           : %s\n", (mode ? "true" : "false"));

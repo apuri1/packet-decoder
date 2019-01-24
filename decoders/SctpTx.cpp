@@ -8,7 +8,7 @@ SctpTx::SctpTx(std::string ipaddr)
    m_ipaddr = ipaddr;
 }
 
-int32_t SctpTx::SendToRemote(uint8_t *buffer, int32_t len)
+int32_t SctpTx::SendMessage(uint8_t *buffer, int32_t len)
 {
     retVal = -1;
 

@@ -40,18 +40,18 @@ int32_t PacketProcessorThread::Activate(PacketBuffer *packet_buffer)
 
     pthread_attr_setdetachstate(&thread_attr_packet_processor, PTHREAD_CREATE_DETACHED);
 
-    int32_t err = pthread_create(&packet_processor_thread,
-                                 &thread_attr_packet_processor,
-                                 PacketProcessorThread::ProcessorThread,
-                                 (void *) packet_processor_ptr);
-    if(err < 0)
+    int32_t ret_val = pthread_create(&packet_processor_thread,
+                                     &thread_attr_packet_processor,
+                                     PacketProcessorThread::ProcessorThread,
+                                     (void *) packet_processor_ptr);
+    if(ret_val < 0)
     {
        printf( "ProcessorThread NOT started\n");
        return -1;
     }
     else
     {
-       printf( "ProcessorThread has started\n");
+       printf( "ProcessorThread [%d] has started \n", ret_val);
 
     }
 

@@ -24,7 +24,6 @@ struct DiameterData
 {
        // The following are the indexes(keys) in the MultiIndex
        //  Note: imsi & session_id are always unique, and modified when update occurs.
-       //        aircraft_ipaddr is non-unique (several imsis on one aircraft etc)
 
        std::string imsi;
        std::string session_id;
@@ -161,9 +160,6 @@ class Config
         void SetInterface(std::string interface);
         std::string GetInterface(){return interface1;}
 
-        void SetInterface2(std::string interface);
-        std::string GetInterface2(){return interface2;}
-
         void SetFilter(std::string str);
         std::string GetFilter(){return filter;}
 
@@ -183,7 +179,7 @@ class Config
       static Config *m_instance;
       std::string process_name, mapping_type;
       uint32_t expiration_secs;
-      std::string interface1, interface2;
+      std::string interface1;
       std::string filter, transmission_protocol;
       bool pcap_flag, mode;
 };

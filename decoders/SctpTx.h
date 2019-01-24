@@ -6,28 +6,18 @@
 #include <cstring>
 #include <string>
 
-#include <sys/socket.h>
-#include <sys/types.h>       // For data types
-#include <sys/socket.h>      // For socket(), connect(), send(), and recv()
-#include <netdb.h>           // For gethostbyname()
-#include <arpa/inet.h>       // For inet_addr()
-
-#include <unistd.h>          // For close()
-#include <fcntl.h>
-
-#include <netinet/in.h>      // For sockaddr_in
-#include <netinet/sctp.h>    // For sctp
+#include "ClientConnection.h"
 
 //Don't call bind in the client. random interface & port chosen by OS
 
 
-class SctpTx
+class SctpTx : public ClientConnection
 {
    public:
 
     SctpTx(std::string ipaddr);
 
-    int32_t SendToRemote(uint8_t *buffer, int32_t len);
+    int32_t SendMessage(uint8_t *buffer, int32_t len);
 
    private:
 

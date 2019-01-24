@@ -1,7 +1,7 @@
 {
-   "_comment" : "JSON Configuration file for the s1pacRelay application",
+   "_comment" : "JSON Configuration file for the Decoder application",
    "Name" : {
-      "name" : "s1pacrelay"
+      "name" : "Decoder"
    },
    "Mapping" : {
       "mapping_type" : "MultiIndex",
@@ -22,14 +22,10 @@
    },
    "Transmission" : {
       "protocol" : "sctp",
-      "_protocol_comment" : "transport protocol used to communicate with aircraft. Options are udp or sctp."
+      "_protocol_comment" : "transport protocol used to communicate interested clients. Options are udp, tcp or sctp."
    },
    "Logging" : {
       "level" : "VERBOSE",
-      "_level_comment" : "Log level"
-   },
-   "Mode" : {
-      "test" : true,
-      "_test_comment" : "Set to true for test/debug mode, set to false for production mode"
+      "_level_comment" : "Log level - TODO"
    }
 }

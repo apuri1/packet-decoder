@@ -123,7 +123,7 @@ int32_t main(int32_t argc, char *arg[])
     Config::Instance()->PrintConfiguration();
 
 // Determine what container to use that shall store Subscriber related data to facilitate
-// Tx of keys to the aircraft where the subscriber is sat.
+//
 
     if(Config::Instance()->GetInternalMapping() == "MultiIndex")
     {
