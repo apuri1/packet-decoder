@@ -14,6 +14,8 @@
 #include <cstdlib>
 #include <fstream>
 
+#include <thread>
+
 #include "Config.h"
 #include "ContainerMultiIndex.h"
 #include "PacketReceiver.h"
@@ -146,9 +148,12 @@ int32_t main(int32_t argc, char *arg[])
         exit(0);
     };
 
-//Allow one to telnet in realtime and query Subscribers data
-//
-    Maint::Instance()->Activate();
+//Allow one to telnet in realtime and query  data
+
+    Maint maint;
+
+    auto MaintenanceThread = std::thread(&Maint::TcpListener, &maint );
+    MaintenanceThread.detach();
 
     if(Config::Instance()->GetReadFromPcap())
     {

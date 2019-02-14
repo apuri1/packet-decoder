@@ -10,7 +10,6 @@
 #include <cctype>
 #include <sstream>
 #include <algorithm>
-#include <pthread.h>
 #include <poll.h>
 
 #include "ContainerMultiIndex.h"
@@ -23,19 +22,11 @@ class Maint
 
     Maint();
 
-    static Maint *Instance();
-
-    int32_t Activate();
-
-    static void* TcpListener(void *data);
-    pthread_t TcpListenerThread;
-
+    void TcpListener();
     int32_t OpenTcpListener(const char *ip_addr, int32_t port);
     void AcceptConnection(int32_t listen_sock);
 
   private:
-
-    static Maint *m_instance;
 
     std::string ProcessMultiIndexRequest(std::string selection);
 

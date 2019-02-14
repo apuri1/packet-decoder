@@ -10,7 +10,7 @@
       "_data_expiration_seconds_comment" : "Number of seconds after which data is erased MultIndex only, mainly for testing"
    },
    "Interfaces" : {
-      "interface1" : "eth2",
+      "interface1" : "enp0s3",
       "_interface1_comment" : "Network interface name e.g eth0.",
       "interface2" : "",
       "_interface2_comment" : "Network interface name e.g eth1."

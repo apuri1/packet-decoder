@@ -1,53 +1,14 @@
 #include "Maint.h"
 
-Maint *Maint::m_instance = NULL;
-
-Maint *Maint::Instance()
-{
-    if (m_instance == NULL)
-    {
-        m_instance = new Maint();
-    }
-
-    return m_instance;
-}
-
 Maint::Maint()
-{}
-
-int32_t Maint::Activate()
 {
     printf( "Maint activated\n");
-
-    pthread_attr_t thread_attr_listener;
-
-    pthread_attr_init(&thread_attr_listener);
-
-    pthread_attr_setdetachstate(&thread_attr_listener, PTHREAD_CREATE_DETACHED);
-
-    int32_t pthread_ret = pthread_create(&TcpListenerThread,
-                                         &thread_attr_listener,
-                                         TcpListener,
-                                         (void *) this);
-
-     if(pthread_ret < 0)
-     {
-        printf( "receiveMessage:: failed ");
-        return -1;
-     }
-     else
-     {
-        printf( "receiveMessage:: created thread .\n");
-     }
-
-     return 0;
 }
 
-void* Maint::TcpListener(void *data)
+
+void Maint::TcpListener()
 {
     printf( "Maint TcpListener running\n");
-
-    Maint *data_ptr = static_cast<Maint*>(data);
 
     struct pollfd fds[1]; // Just the one incoming connection at any given time from the gnd AMS
 
@@ -65,7 +26,7 @@ void* Maint::TcpListener(void *data)
     {
         if(listen_sock < 0)
         {
-            listen_sock = data_ptr->OpenTcpListener(ip_address.c_str(), port);
+            listen_sock = OpenTcpListener(ip_address.c_str(), port);
 
             if(listen_sock < 0)
             {
@@ -100,14 +61,12 @@ void* Maint::TcpListener(void *data)
             }
             else
             {
-               data_ptr->AcceptConnection(listen_sock);
+               AcceptConnection(listen_sock);
             }
         }
     }
 
     /* listener socket will stay open accepting connections until application exits */
-
-    return NULL;
 }
 
 int32_t Maint::OpenTcpListener(const char *ip_addr, int32_t port)
