@@ -24,19 +24,10 @@ class PacketReceiver
     PacketReceiver(){};
     ~PacketReceiver(){};
 
-    static PacketReceiver *Instance();
-
-    int32_t Activate(PacketBuffer *packet_buffer, std::string interface_to_sniff);
-
-    static void* PacketReceiverThread(void * packet_ptr);
+    int32_t PacketReceiverThread(pcap_args *args);
 
    private:
 
-    pthread_t packet_receiver_thread;
-
-    static PacketReceiver *m_instance;
-
-    DecodeDiameter *diameter_decoder;
 };
 
 #endif

@@ -179,11 +179,14 @@ int32_t main(int32_t argc, char *arg[])
 
         printf( "Dedicating 1 live pcap thread for all traffic\n");
 
-        if(PacketReceiver::Instance()->Activate(packet_buffer, Config::Instance()->GetInterface()) !=0)
-        {
-           printf( "exiting...");
-              exit(0);
-        }
+        pcap_args *args = new pcap_args();
+        args->packet_buffer = packet_buffer;
+        args->interface_to_sniff = Config::Instance()->GetInterface();
+
+        PacketReceiver packet_receiver;
+
+        auto PacketReceiverThread = std::thread(&PacketReceiver::PacketReceiverThread, &packet_receiver, args);
+        PacketReceiverThread.detach();
     }
 
     for(;;)

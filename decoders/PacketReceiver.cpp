@@ -5,59 +5,9 @@
 #undef MODULE_NAME
 #define MODULE_NAME "PACKET RECEIVER"
 
-PacketReceiver *PacketReceiver::m_instance = nullptr;
 
-PacketReceiver *PacketReceiver::Instance()
+int32_t PacketReceiver::PacketReceiverThread(pcap_args *args)
 {
-    if(m_instance == nullptr)
-    {
-       printf( "Creating new instance of PacketReceiver\n");
-       m_instance = new PacketReceiver();
-    }
-
-    return m_instance;
-}
-
-int32_t PacketReceiver::Activate(PacketBuffer *packet_buffer,
-                                 std::string interface_to_sniff)
-{
-    int32_t err;
-
-    this->diameter_decoder   = diameter_decoder;
-
-    pcap_args *args = new pcap_args();
-
-    args->packet_buffer = packet_buffer;
-
-    args->interface_to_sniff = interface_to_sniff;
-
-    pthread_attr_t thread_attr_packet_receiver;
-
-    pthread_attr_init(&thread_attr_packet_receiver);
-
-    pthread_attr_setdetachstate(&thread_attr_packet_receiver, PTHREAD_CREATE_DETACHED);
-
-    err = pthread_create(&packet_receiver_thread,
-                         &thread_attr_packet_receiver,
-                         PacketReceiverThread,
-                         (void *) args);
-    if(err<0)
-    {
-      printf( "PacketReceiverThread NOT started\n");
-      return -1;
-    }
-    else
-    {
-      printf( "PacketReceiverThread has started\n");
-    }
-
-    return 0;
-}
-
-void* PacketReceiver::PacketReceiverThread(void * packet_ptr)
-{
-    pcap_args *pkt_receiver = static_cast<pcap_args*>(packet_ptr);
-
     int32_t ret_val = 0;
 
     pcap_t *handle; //Handle of the device that shall be sniffed
@@ -69,7 +19,7 @@ void* PacketReceiver::PacketReceiverThread(void * packet_ptr)
     bpf_u_int32 net;         // The IP of our sniffing device
 
     const char *protocol_filter = Config::Instance()->GetFilter().c_str();
-    const char *devname = pkt_receiver->interface_to_sniff.c_str();
+    const char *devname = args->interface_to_sniff.c_str();
 
     if(pcap_lookupnet(devname, &net, &mask, errbuf) == -1)
     {
@@ -87,7 +37,7 @@ void* PacketReceiver::PacketReceiverThread(void * packet_ptr)
     if (handle == nullptr)
     {
         printf( "Couldn't open device %s : %s\n", devname, errbuf);
-        return nullptr;
+        return -1;
     }
 
 //determine ethernet or linux cooked headers
@@ -98,13 +48,13 @@ void* PacketReceiver::PacketReceiverThread(void * packet_ptr)
     {
        printf( "Using Linux cooked capture encapsulation (link layer header type %d)  \n", link_layer_header_type);
 
-       pkt_receiver->link_layer_header_size = 16;
+       args->link_layer_header_size = 16;
     }
     else if(link_layer_header_type == kLINKTYPE_ETHERNET)
     {
        printf( "Using ethernet (link layer header type %d)  \n", link_layer_header_type);
 
-       pkt_receiver->link_layer_header_size = sizeof(struct ethhdr);
+       args->link_layer_header_size = sizeof(struct ethhdr);
     }
     else
     {
@@ -117,25 +67,25 @@ void* PacketReceiver::PacketReceiverThread(void * packet_ptr)
    if(pcap_compile(handle, &fp, protocol_filter, 0, net) == -1)
    {
       printf( "Couldn't parse filter %s: %s\n", protocol_filter, pcap_geterr(handle));
-      return nullptr;
+      return -1;
    }
    if(pcap_setfilter(handle, &fp) == -1)
    {
       printf( "Couldn't install filter %s: %s\n", protocol_filter, pcap_geterr(handle));
-      return nullptr;
+      return -1;
    }
+
+   printf( "PacketReceiverThread running \n");
 
    //Put the device in sniff loop
    for(;;)
    {
-       if( (ret_val = pcap_loop(handle , -1 , process_packet , (uint8_t*)pkt_receiver)) < 0 )
+       if( (ret_val = pcap_loop(handle , -1 , process_packet , (uint8_t*)args)) < 0 )
        {
           printf( "pcap_loop error: %d, %s\n", ret_val, pcap_geterr(handle));
           sleep(1); //don't stress the CPU if continuous failures
        }
    }
-
-    return nullptr;
 }
 
 void process_packet(uint8_t *args, const struct pcap_pkthdr *header, const uint8_t *buffer)
