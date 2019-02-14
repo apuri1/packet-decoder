@@ -38,6 +38,7 @@ OBJS 		= Config.o \
                 DecodeDiameter.o \
                 DecodeHTTP.o \
                 DecodeMQTT.o \
+                SctpTx.o \
                 Maint.o
 
 

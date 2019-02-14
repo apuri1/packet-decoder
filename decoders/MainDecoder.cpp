@@ -137,22 +137,20 @@ int32_t main(int32_t argc, char *arg[])
        exit(0);
     }
 
-
-
     PacketBuffer *packet_buffer = new PacketBuffer();
 
 //This will process all layers of the ethernet frame
-//
-    if((PacketProcessorThread::Instance()->Activate(packet_buffer)) != 0)
-    {
-        exit(0);
-    };
+
+    PacketProcessor packet_processor;
+
+    auto PacketProcessorThread = std::thread(&PacketProcessor::ProcessorThread, &packet_processor, packet_buffer);
+    PacketProcessorThread.detach();
 
 //Allow one to telnet in realtime and query  data
 
     Maint maint;
 
-    auto MaintenanceThread = std::thread(&Maint::TcpListener, &maint );
+    auto MaintenanceThread = std::thread(&Maint::TcpListener, &maint);
     MaintenanceThread.detach();
 
     if(Config::Instance()->GetReadFromPcap())

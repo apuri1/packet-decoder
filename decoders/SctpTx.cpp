@@ -3,22 +3,12 @@
 //TODO, make this a seperatate thread.
 
 
-SctpTx::SctpTx(std::string ipaddr)
+SctpTx::SctpTx(std::string ipaddr, uint32_t port)
 {
-   m_ipaddr = ipaddr;
-}
+    m_ipaddr = ipaddr;
+    m_port   = port;
 
-int32_t SctpTx::SendMessage(uint8_t *buffer, int32_t len)
-{
-    retVal = -1;
-
-    sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_SCTP);
-
-    if(sockfd < 0)
-    {
-        printf( "ERROR opening socket\n");
-        return retVal;
-    }
+    CreateSocket(PF_INET, SOCK_STREAM, IPPROTO_SCTP);
 
     int32_t flags;
     flags = fcntl(sockfd, F_GETFL, 0);
@@ -27,6 +17,32 @@ int32_t SctpTx::SendMessage(uint8_t *buffer, int32_t len)
     events.sctp_association_event = 1;
     events.sctp_data_io_event = 1;
 
+    SetSocketOptions(sockfd, IPPROTO_SCTP, SCTP_EVENTS, &events, sizeof (events))
+}
+
+int32_t SctpTx::SendMessage(uint8_t *buffer, int32_t len)
+{
+    retVal = -1;
+
+/*
+    sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_SCTP);
+
+    if(sockfd < 0)
+    {
+        printf( "ERROR opening socket\n");
+        return retVal;
+    }
+*/
+
+    /*
+    int32_t flags;
+    flags = fcntl(sockfd, F_GETFL, 0);
+    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+
+    events.sctp_association_event = 1;
+    events.sctp_data_io_event = 1;
+*/
+    /*
     retVal = setsockopt(sockfd, IPPROTO_SCTP, SCTP_EVENTS, &events, sizeof (events));
 
     printf( "retVal %d\n", retVal);
@@ -36,7 +52,11 @@ int32_t SctpTx::SendMessage(uint8_t *buffer, int32_t len)
         printf( "setsockopt SCTP_EVENTS \n");
         return retVal;
     }
+*/
 
+
+/*
+////
     memset(&initmsg, 0, sizeof(struct sctp_initmsg));
 
     initmsg.sinit_num_ostreams = 5;
@@ -55,6 +75,8 @@ int32_t SctpTx::SendMessage(uint8_t *buffer, int32_t len)
 
         return retVal;
     }
+    /////
+*//////////
 
     memset(&destination_address, 0, sizeof(struct sockaddr_in));
     destination_address.sin_family      = AF_INET;

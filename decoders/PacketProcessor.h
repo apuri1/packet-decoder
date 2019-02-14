@@ -8,7 +8,6 @@
 
 #include <sstream>
 #include <pcap.h>
-#include <pthread.h>
 
 #include "PacketBuffer.h"
 #include "DecodeDiameter.h"
@@ -18,13 +17,14 @@
 
 #include <chrono>
 
-
 class PacketProcessor
 {
     public:
 
       PacketProcessor();
       ~PacketProcessor(){};
+
+      void ProcessorThread(PacketBuffer *packet_buffer);
 
       uint32_t ProcessPacketHeaders(const struct pcap_pkthdr *header,
                                     const uint8_t *buffer,
@@ -50,28 +50,6 @@ class PacketProcessor
 
       std::string ExtractPacketTime(const struct pcap_pkthdr *header);
 
-};
-
-class PacketProcessorThread
-{
-    public:
-
-      PacketProcessorThread();
-
-      int32_t Activate(PacketBuffer *packet_buffer);
-
-      static PacketProcessorThread *Instance();
-
-      static void* ProcessorThread(void * ptr);
-
-    private:
-
-      static PacketProcessorThread *m_instance;
-
-//TODO use particular thread throughout
-      pthread_t packet_processor_thread;
-
-      PacketProcessor *packet_processor_ptr;
 };
 
 #endif

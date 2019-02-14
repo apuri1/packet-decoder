@@ -22,8 +22,10 @@ class ClientConnection
 {
 
    public:
-      ClientConnection(){retVal = -1};
+      ClientConnection(){retVal = -1;}
       ClientConnection(std::string ipaddr, uint32_t port);
+
+      //int32_t ConstructClient();
 
       int32_t CreateSocket(int32_t domain, int32_t type, int32_t protocol)
       {
@@ -36,9 +38,9 @@ class ClientConnection
           }
       };
 
-      int32_t SetSocketOptions(int32_t level, int32_t optname, const void *optval, socklen_t optlen)
+      int32_t SetSocketOptions(int32_t level, int32_t optname, const void *optval, int32_t optlen)
       {
-           retVal = setsockopt(sockfd, level, optnam, &optval, optlen);
+           retVal = setsockopt(sockfd, level, optname, &optval, optlen);
 
             if(retVal < 0)
             {
@@ -51,7 +53,8 @@ class ClientConnection
 
    protected:
 
-      int32_t sockfd, m_port, retVal;
+      int32_t sockfd, retVal;
+      uint32_t m_port;
 
       struct sockaddr_in server_address, destination_address;
 

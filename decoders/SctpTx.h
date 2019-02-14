@@ -15,20 +15,20 @@ class SctpTx : public ClientConnection
 {
    public:
 
-    SctpTx(std::string ipaddr);
+    SctpTx(std::string ipaddr, uint32_t port);
 
     int32_t SendMessage(uint8_t *buffer, int32_t len);
 
    private:
 
-    int32_t sockfd, port, retVal;
+    //int32_t sockfd, port, retVal;
 
-    struct sockaddr_in destination_address;
+    //struct sockaddr_in destination_address;
 
     struct sctp_initmsg   initmsg;
     struct sctp_event_subscribe events;
 
-    std::string m_ipaddr;
+    //std::string m_ipaddr;
 
 };
 

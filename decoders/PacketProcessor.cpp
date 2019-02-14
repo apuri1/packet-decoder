@@ -2,9 +2,6 @@
 #include "PacketBuffer.h"
 #include "Config.h"
 
-PacketProcessorThread *PacketProcessorThread::m_instance = nullptr;
-
-
 PacketProcessor::PacketProcessor()
 {
 // Instantiate a bunch of protocol decoders
@@ -14,92 +11,46 @@ PacketProcessor::PacketProcessor()
     mqtt_decoder     = new DecodeMQTT();
 }
 
-PacketProcessorThread::PacketProcessorThread()
+void PacketProcessor::ProcessorThread(PacketBuffer *packet_buffer)
 {
-    packet_processor_ptr = new PacketProcessor();
-}
-
-PacketProcessorThread *PacketProcessorThread::Instance()
-{
-    if(m_instance == nullptr)
-    {
-       printf( "Creating new instance of PacketProcessorThread\n");
-       m_instance = new PacketProcessorThread();
-    }
-
-    return m_instance;
-}
-
-int32_t PacketProcessorThread::Activate(PacketBuffer *packet_buffer)
-{
-    packet_processor_ptr->packet_buffer    = packet_buffer;
-
-    pthread_attr_t thread_attr_packet_processor;
-
-    pthread_attr_init(&thread_attr_packet_processor);
-
-    pthread_attr_setdetachstate(&thread_attr_packet_processor, PTHREAD_CREATE_DETACHED);
-
-    int32_t ret_val = pthread_create(&packet_processor_thread,
-                                     &thread_attr_packet_processor,
-                                     PacketProcessorThread::ProcessorThread,
-                                     (void *) packet_processor_ptr);
-    if(ret_val < 0)
-    {
-       printf( "ProcessorThread NOT started\n");
-       return -1;
-    }
-    else
-    {
-       printf( "ProcessorThread [%d] has started \n", ret_val);
-
-    }
-
-    return 0;
-}
-
-void* PacketProcessorThread::ProcessorThread(void *ptr)
-{
-     PacketProcessor *packet_processor = static_cast<PacketProcessor*>(ptr);
-
      for(;;)
      {
            printf( "checking for any packets to decode.....\n");
 
-           std::unique_lock<std::mutex> guard(packet_processor->packet_buffer->circ_mutex);
+           std::unique_lock<std::mutex> guard(packet_buffer->circ_mutex);
 
-           while(!packet_processor->packet_buffer->buffered)
+           while(!packet_buffer->buffered)
            {
-              packet_processor->packet_buffer->circ_condition.wait(guard);
+              packet_buffer->circ_condition.wait(guard);
 
               printf( "wait for PacketBuffer.....\n");
            }
 
-           packet_processor->packet_buffer->buffered  = false;
-           packet_processor->packet_buffer->processed  = true;
+           packet_buffer->buffered  = false;
+           packet_buffer->processed  = true;
 
-           if(packet_processor->packet_buffer->GetBufferSize()< 1)
+           if(packet_buffer->GetBufferSize()< 1)
            {
               printf( "nothing to process, notifying PacketBuffer\n");
               guard.unlock();
-              packet_processor->packet_buffer->circ_condition.notify_all();
+              packet_buffer->circ_condition.notify_all();
               continue;
            }
 
-           BufferedPacket buf = packet_processor->packet_buffer->ProcessBuffer();
+           BufferedPacket buf = packet_buffer->ProcessBuffer();
 
            printf( "something to process, notifying PacketBuffer\n");
 
            guard.unlock();
 
-           packet_processor->packet_buffer->circ_condition.notify_all();
+           packet_buffer->circ_condition.notify_all();
 
   //
   //    Measure performance from start of packet decoding to completion of container processing
   //
            auto start = std::chrono::system_clock::now();
 
-           if(packet_processor->ProcessPacketHeaders(&buf.header, buf.buffer, buf.buffer_length, buf.link_layer_header_size) == 0)
+           if(ProcessPacketHeaders(&buf.header, buf.buffer, buf.buffer_length, buf.link_layer_header_size) == 0)
            {
               printf( "Processed packet\n");
            }
@@ -115,8 +66,6 @@ void* PacketProcessorThread::ProcessorThread(void *ptr)
 
            printf( "%lld microseconds (%lld milliseconds)\n\n", duration_microseconds.count(), duration_milliseconds.count());
      }
-
-     return nullptr;
 }
 
 uint32_t PacketProcessor::ProcessPacketHeaders(const struct pcap_pkthdr *header,

@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <pthread.h>
 #include "DecodeDiameter.h"
 #include "PacketBuffer.h"
 
