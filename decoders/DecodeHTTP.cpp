@@ -13,8 +13,7 @@
 #include <fstream>
 
 
-//TODO
-#include <curl/curl.h>
+//#include <curl/curl.h>
 
 #define BOOST_ERROR_CODE_HEADER_ONLY
 #include <boost/system/error_code.hpp>
@@ -42,32 +41,8 @@ void DecodeHTTP::ProcessTCPPayload(std::vector<uint8_t> & payload,
   //get the full string representative of contents
    std::string contents(payload.begin(), payload.end());
 
-   printf("contents %s", contents.c_str());
+   printf("contents %s\n", contents.c_str());
 
-   CURL *curl = curl_easy_init();
-
-   if(curl)
-   {
-      /*Format the http message*/
-      char *output = curl_easy_unescape(curl, contents.c_str(), 0, &length);
-
-      if(output)
-      {
-         printf("process_event obtained\n: %s\n", output);
-
-         printf("string length: %d vs num bytes: %d\n", length, payload_length);
-
-         //pass the num of bytes along.
-         //parse_payload_info(output, len);
-
-         curl_free(output);
-      }
-      else
-      {
-         printf("Failed\n ");
-      }
-   }
-
-   curl_easy_cleanup(curl);
+   printf("payload length %d\n", payload_length);
 
 }
